@@ -38,6 +38,5 @@ cp .env.example .env
 ### 結果.ブラウザで確認
 
 - [Laravelウェルカムページ](http://localhost:8081) にアクセスし、問題なく表示されれば OK です。  
-パーミッションエラー発生した場合、``sudo chmod -R 777 src/api/*``を実行
 
 - [pgAdmin](http://localhost:8080) にアクセスし、問題なく表示されれば OK です。
