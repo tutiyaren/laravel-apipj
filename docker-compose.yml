@@ -1,0 +1,64 @@
+services:
+    nginx:
+        image: nginx:1.25.3
+        ports:
+            - 8081:80
+        volumes:
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./src:/var/www/
+        depends_on:
+            - php
+        networks:
+            - projectapi_laravel
+
+    php:
+        build:
+            context: ./docker/php
+            dockerfile: ./Dockerfile
+            args:
+                - HOST_UID=${HOST_UID}
+                - HOST_GID=${HOST_GID}
+        volumes:
+            - ./src:/var/www/
+        networks:
+            - projectapi_laravel
+
+    db:
+        image: postgres:16
+        ports: 
+            - "5432:5432"
+        restart: always
+        environment:
+            POSTGRES_DB: test
+            POSTGRES_USER: test
+            POSTGRES_PASSWORD: testtest
+        volumes:
+            - ./docker/db/postgresql.conf:/etc/postgresql/postgresql.conf
+            - db-data:/var/lib/postgresql/data
+        networks:
+            - projectapi_laravel
+
+    pgadmin:
+        image: dpage/pgadmin4:8.11
+        ports:
+            - 8080:80
+        environment:
+            PGADMIN_DEFAULT_EMAIL: test@example.com
+            PGADMIN_DEFAULT_PASSWORD: testtest
+            PGADMIN_CONFIG_SERVER_MODE: "False"
+            PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+        depends_on:
+            - db
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin
+            - ./config/servers.json:/pgadmin4/servers.json
+        networks:
+            - projectapi_laravel
+
+volumes:
+    db-data:
+    pgadmin-data:
+
+networks:
+    projectapi_laravel:
+        driver: bridge
