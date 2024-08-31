@@ -19,11 +19,12 @@ make up
 ```
 
 2.プロジェクトの設定
-まずは下記コマンドで、Laravelのアプリケーションキーを生成する
+まずは下記コマンドで、Laravelのアプリケーションキー生成と、パッケージのインストールをする
 ```
 make bash
 cd api
 php artisan key:generate
+composer install
 exit
 ```
 
